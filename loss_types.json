@@ -1,0 +1,19 @@
+{
+  "1x Fuchs gefangen": 10,
+  "2x Fuchs gefangen": 20,
+  "Doppelbock": 10,
+  "Geklopft": 10,
+  "2x geklopft": 20,
+  "Sieg": 10,
+  "Sieg gegen die Damen": 10,
+  "Unter 90": 10,
+  "Unter 60": 10,
+  "Unter 30": 10,
+  "Herz geht durch": 10,
+  "Verlierer: Herz geht durch": -10,
+  "Verlierer: Geklopft": 10,
+  "Verlierer: 2x geklopft": 20,
+  "Verlierer: Herz geht durch": -10,
+  "Verlierer: 1x Fuchs gefangen": -10,
+  "Verlierer: 2x Fuchs gefangen": -10
+}

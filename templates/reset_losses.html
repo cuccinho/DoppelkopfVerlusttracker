@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doppelkopf Verlusttracker - Verluste zurücksetzen</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Doppelkopf Verlusttracker - Verluste zurücksetzen</h1>
+
+    <form action="{{ url_for('reset_losses') }}" method="POST">
+        <p>Bist du sicher, dass du alle Verluste zurücksetzen möchtest?</p>
+        <input type="submit" class="button" value="Ja">
+    </form>
+    <a href="{{ url_for('index') }}" class="button">Zurück zur Auswahl</a>
+</body>
+</html>

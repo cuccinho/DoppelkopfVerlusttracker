@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doppelkopf Verlust-Tracker - Runde {{ current_round.round_num if current_round else 'N/A' }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Doppelkopf Verlust-Tracker</h1>
+    <h2>Aktuelle Runde: {{ current_round.round_num if current_round else 'N/A' }}</h2>
+
+    <h2>Verluste eintragen</h2>
+    <form action="{{ url_for('index') }}" method="POST">
+        <p><strong>Spieler:</strong></p>
+        {% for player in players %}
+            <input type="checkbox" name="player" value="{{ player.name }}">{{ player.name }}<br><br>
+        {% endfor %}
+
+        <p><strong>Verlustarten:</strong></p>
+        {% for loss_type in loss_types %}
+            <input type="checkbox" name="{{ loss_type }}" value="true">{{ loss_type }} ({{ loss_types[loss_type] }} Cent)<br><br>
+        {% endfor %}
+
+        <br>
+        <input type="submit" class="button" value="Verlust eintragen">
+    </form>
+
+    <h2><a href="{{ url_for('totals') }}" class="button">Verlustübersicht</a></h2>
+    <h2><a href="{{ url_for('reset_losses') }}" class="button">Verluste zurücksetzen</a></h2>
+</body>
+</html>

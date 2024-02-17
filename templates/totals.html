@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gesamtverluste</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .right-align {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gesamtverluste</h1>
+    <table>
+        <tr>
+            <th>Spieler</th>
+            <th class="right-align">Gesamtverlust in Cent</th>
+            <th class="right-align">Runden</th>
+        </tr>
+        {% for player in players %}
+        <tr>
+            <td>{{ player.name }}</td>
+            <td class="right-align">{{ player.get_total_loss() }}</td>
+            <td class="right-align"><a href="{{ url_for('rounds', player_name=player.name) }}" class="button">Runden anzeigen</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('index') }}" class="button">Zurück zur Auswahl</a>
+</body>
+</html>

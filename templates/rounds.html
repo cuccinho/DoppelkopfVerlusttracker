@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rundenverluste</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Runden für {{ player.name }}</h1>
+    <ul>
+        {% for round in rounds %}
+            {% if round.round_info %}
+                <li>
+                    <strong>Runde {{ round.round_num }}</strong><br>
+                    Verlustarten: {{ round.round_info.split(':')[1].replace(', Gesamtverlust', '') }}<br>
+                    Gesamtverlust: {{ round.round_info.split(':')[2] }}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('totals') }}" class="button">Zurück zur Verlustübersicht</a>
+    <a href="{{ url_for('index') }}" class="button">Zurück zur Auswahl</a>
+</body>
+</html>
