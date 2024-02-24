@@ -3,21 +3,30 @@
 <head>
     <title>Doppelkopf Verlust-Tracker - Runde {{ current_round.round_num if current_round else 'N/A' }}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1>Doppelkopf Verlust-Tracker</h1>
     <h2>Aktuelle Runde: {{ current_round.round_num if current_round else 'N/A' }}</h2>
 
     <h2>Verluste eintragen</h2>
-    <form action="{{ url_for('index') }}" method="POST">
-        <p><strong>Spieler:</strong></p>
-        {% for player in players %}
-            <input type="checkbox" name="player" value="{{ player.name }}">{{ player.name }}<br><br>
-        {% endfor %}
+    <form id="loss_form" action="{{ url_for('index') }}" method="POST">
+        <div style="display: inline-block; vertical-align: top;">
+            <p><strong>Spieler:</strong></p>
+            {% for player in players %}
+                <input type="checkbox" name="player" value="{{ player.name }}">{{ player.name }}<br><br>
+            {% endfor %}
+        </div>
+
+        <div style="display: inline-block; margin-left: 20px; vertical-align: top;">
+            <p><strong>Punktzahl:</strong></p>
+            <input type="number" id="winner_loss" name="winner_loss" placeholder="Punkte des Gewinners"><br><br>
+            <input type="number" id="loser_loss" name="loser_loss" placeholder="Punkte des Verlierers"><br><br>
+        </div>
 
         <p><strong>Verlustarten:</strong></p>
-        {% for loss_type in loss_types %}
-            <input type="checkbox" name="{{ loss_type }}" value="true">{{ loss_type }} ({{ loss_types[loss_type] }} Cent)<br><br>
+        {% for loss_type, value in loss_types.items() %}
+            <input type="checkbox" id="{{ loss_type.replace(' ', '_') }}" name="{{ loss_type }}" value="true">{{ loss_type }} ({{ value }} Cent)<br><br>
         {% endfor %}
 
         <br>
@@ -26,5 +35,47 @@
 
     <h2><a href="{{ url_for('totals') }}" class="button">Verlustübersicht</a></h2>
     <h2><a href="{{ url_for('reset_losses') }}" class="button">Verluste zurücksetzen</a></h2>
+
+    <div style="margin-top: 20px;">
+        <p><strong>Testmode:</strong></p>
+        <input type="checkbox" id="test_mode" name="test_mode">Testmode<br><br>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        $('#loser_loss').on('blur', function() {
+            let loserLoss = parseInt($('#loser_loss').val());
+            let lossTypes = JSON.parse('{{ loss_types | tojson | safe }}'); // Parse loss_types JSON
+            let sortedLossTypes = Object.entries(lossTypes).sort((a, b) => b[1] - a[1]); // Sort lossTypes in descending order of value
+            for (let [lossType, threshold] of sortedLossTypes) {
+                let match = lossType.match(/Unter (\d+)/);
+                if (match) {
+                    let thresholdValue = parseInt(match[1]);
+                    let checkboxId = lossType.replace(' ', '_');
+                    $('#' + checkboxId).prop('checked', loserLoss < thresholdValue);
+                }
+            }
+        });
+
+        $('#loss_form').submit(function(e) {
+            e.preventDefault(); // Prevent form submission
+            let winnerLoss = parseInt($('#winner_loss').val());
+            let loserLoss = parseInt($('#loser_loss').val());
+            let totalPoints = winnerLoss + loserLoss;
+            if (totalPoints !== 240) {
+                alert('Die Gesamtpunktzahl muss 240 betragen. Bitte überprüfen Sie Ihre Eingaben.');
+                return;
+            }
+            let isTestMode = $('#test_mode').prop('checked');
+            if (isTestMode) {
+                alert('Testmode activated! Losses will not be added to the database.');
+                return;
+            }
+            // Proceed with form submission
+            this.submit();
+        });
+    });
+    </script>
+
 </body>
 </html>

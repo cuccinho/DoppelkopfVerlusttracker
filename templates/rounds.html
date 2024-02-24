@@ -11,8 +11,10 @@
             {% if round.round_info %}
                 <li>
                     <strong>Runde {{ round.round_num }}</strong><br>
-                    Verlustarten: {{ round.round_info.split(':')[1].replace(', Gesamtverlust', '') }}<br>
-                    Gesamtverlust: {{ round.round_info.split(':')[2] }}
+                    {% set round_info_split = round.round_info.split(':') %}
+                    Verlustarten: {{ round_info_split[1].replace(', Gesamtverlust', '') }}<br>
+                    Gesamtverlust: {{ round_info_split[2] }}<br>
+                    Runde wurde mit einer Punktzahl von {{ round.loser_loss }} zu {{ round.winner_loss }} verloren
                 </li>
             {% endif %}
         {% endfor %}
